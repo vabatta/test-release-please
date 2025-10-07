@@ -13,8 +13,6 @@ jobs:
       issues: write
       packages: write
       pull-requests: write
-    outputs:
-      services: ${{ steps.collect.outputs.services }}
 
     steps:
       - uses: googleapis/release-please-action@v4
@@ -23,10 +21,7 @@ jobs:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
-      - name: Collect release outputs
-        id: collect
-        run: |
-          echo "::set-output name=services::$(echo '${{ toJson(steps.release.outputs) }}')"
       - name: Debug release outputs
+        continue-on-error: true
         run: |
-          echo "Release outputs: ${{ steps.collect.outputs.services }}"
+          echo "Release outputs: ${{ toJson(steps.release.outputs) }}"

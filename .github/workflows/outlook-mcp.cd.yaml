@@ -11,22 +11,19 @@ permissions:
   contents: write
   packages: write
 
-env:
-  SERVICE_NAME: outlook-mcp
-
 jobs:
   github-artifact:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs['services/outlook-mcp--release_created'] == 'true' }}
     uses: ./.github/workflows/_template-cd-gh-artifact.yaml
     with:
-      service-name: ${{ env.SERVICE_NAME }}
+      service-name: outlook-mcp
       service-tag: ${{ github.event.workflow_run.outputs['services/outlook-mcp--tag_name'] }}
 
   containerize:
     if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs['services/outlook-mcp--release_created'] == 'true' }}
     uses: ./.github/workflows/_template-cd-containerize.yaml
     with:
-      service-name: ${{ env.SERVICE_NAME }}
+      service-name: outlook-mcp
       service-version: ${{ github.event.workflow_run.outputs['services/outlook-mcp--version'] }}
       dockerfile: services/outlook-mcp/deploy/Dockerfile
 
