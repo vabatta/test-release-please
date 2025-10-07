@@ -1,0 +1,13 @@
+{
+  "name": "@unscoped/connectors",
+  "private": true,
+  "scripts": {
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.16.1"
+}
+

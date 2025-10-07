@@ -1,0 +1,53 @@
+name: "[TEMPLATE] CD: Containerize"
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: "Name of the service (e.g., factset-mcp)"
+        required: true
+        type: string
+      service-version:
+        description: "Version of the package (e.g., 1.2.0)"
+        required: true
+        type: string
+      dockerfile:
+        description: "Path to a specific Dockerfile (e.g., services/factset-mcp/deploy/Dockerfile)"
+        default: "./Dockerfile"
+        type: string
+
+jobs:
+  # Build and push container to registry
+  containerize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      packages: write
+    env:
+      CHART_REPO: ghcr.io/unique-ag/connectors/services/${{ inputs.service-name }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Add docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.CHART_REPO }}
+          tags: |
+            type=raw,value=${{ inputs.service-version }}
+
+      - name: Output metadata for testing
+        run: |
+          echo "CHART_REPO: ${{ env.CHART_REPO }}"
+          echo "Dockerfile Path: ${{ inputs.dockerfile }}"
+          echo "Service Name: ${{ inputs.service-name }}"
+          echo "Service Version: ${{ inputs.service-version }}"
+          echo "Tags: ${{ steps.meta.outputs.tags }}"
+          echo "Labels: ${{ steps.meta.outputs.labels }}"
