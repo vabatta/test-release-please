@@ -13,6 +13,8 @@ jobs:
       issues: write
       packages: write
       pull-requests: write
+    outputs:
+      ${{ steps.release.outputs }}
 
     steps:
       - uses: googleapis/release-please-action@v4
@@ -25,3 +27,4 @@ jobs:
         continue-on-error: true
         run: |
           echo "Release outputs: ${{ toJson(steps.release.outputs) }}"
+
