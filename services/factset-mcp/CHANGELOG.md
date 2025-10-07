@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/vabatta/test-release-please/compare/factset-mcp@v0.1.1...factset-mcp@v0.1.2) (2025-10-07)
+
+
+### Features
+
+* **factset-mcp:** release very very new version ([#8](https://github.com/vabatta/test-release-please/issues/8)) ([fc00dc4](https://github.com/vabatta/test-release-please/commit/fc00dc4817cdb85ff2002985fbedda003e5a37a6))
+
 ## [0.1.1](https://github.com/vabatta/test-release-please/compare/factset-mcp@v0.1.0...factset-mcp@v0.1.1) (2025-10-07)
 
 
