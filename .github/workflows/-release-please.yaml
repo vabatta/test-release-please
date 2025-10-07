@@ -12,6 +12,11 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
+    outputs:
+      "services/factset-mcp--release_created": ${{ steps.release.outputs['services/factset-mcp--release_created'] }}
+      "services/factset-mcp--version": ${{ steps.release.outputs['services/factset-mcp--version'] }}
+      "services/outlook-mcp--release_created": ${{ steps.release.outputs['services/outlook-mcp--release_created'] }}
+      "services/outlook-mcp--version": ${{ steps.release.outputs['services/outlook-mcp--version'] }}
 
     steps:
       - uses: googleapis/release-please-action@v4
@@ -22,3 +27,18 @@ jobs:
         run: |
           echo "Release outputs: ${{ toJson(steps.release.outputs) }}"
 
+  release-factset-mcp:
+    needs: release-please
+    if: ${{ needs.release-please.outputs['services/factset-mcp--release_created'] == 'true' }}
+    uses: ./.github/workflows/_template-cd.yaml
+    with:
+      service-name: factset-mcp
+      service-version: ${{ needs.release-please.outputs['services/factset-mcp--version'] }}
+
+  release-outlook-mcp:
+    needs: release-please
+    if: ${{ needs.release-please.outputs['services/outlook-mcp--release_created'] == 'true' }}
+    uses: ./.github/workflows/_template-cd-containerize.yaml
+    with:
+      service-name: outlook-mcp
+      service-version: ${{ needs.release-please.outputs['services/outlook-mcp--version'] }}
