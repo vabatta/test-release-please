@@ -1,3 +1,3 @@
 # factset-mcp
 
-Check out the new version!
+Check out the very new version!
