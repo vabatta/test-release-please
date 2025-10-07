@@ -1,29 +1,43 @@
 name: "[mcp/server/outlook] CD"
 
 on:
-  workflow_run:
-    workflows:
-      - Release-Please
-    types:
-      - completed
-
-permissions:
-  contents: write
-  packages: write
+  push:
+    branches:
+      - main
 
 jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    outputs:
+      "release_created": ${{ steps.release.outputs['services/outlook-mcp--release_created'] }}
+      "tag_name": ${{ steps.release.outputs['services/outlook-mcp--tag_name'] }}
+      "version": ${{ steps.release.outputs['services/outlook-mcp--version'] }}
+
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          skip-github-release: true
+          skip-github-pull-request: true
+          skip-labeling: true
+
+      - name: Debug release outputs
+        continue-on-error: true
+        run: |
+          echo "Release outputs: ${{ toJson(steps.release.outputs) }}"
+
   github-artifact:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.release['services/outlook-mcp--release_created'] == 'true' }}
+    needs: release-please
+    if: ${{ needs.release-please.outputs['release_created'] == 'true' }}
     uses: ./.github/workflows/_template-cd-gh-artifact.yaml
     with:
       service-name: outlook-mcp
-      service-tag: ${{ github.event.workflow_run.outputs.release['services/outlook-mcp--tag_name'] }}
+      service-tag: ${{ needs.release-please.outputs['tag_name'] }}
 
   containerize:
-    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.release['services/outlook-mcp--release_created'] == 'true' }}
+    needs: release-please
+    if: ${{ needs.release-please.outputs['release_created'] == 'true' }}
     uses: ./.github/workflows/_template-cd-containerize.yaml
     with:
       service-name: outlook-mcp
-      service-version: ${{ github.event.workflow_run.outputs.release['services/outlook-mcp--version'] }}
-      dockerfile: services/outlook-mcp/deploy/Dockerfile
-
+      service-version: ${{ needs.release-please.outputs['version'] }}

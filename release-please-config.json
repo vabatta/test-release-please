@@ -11,13 +11,13 @@
       "extra-files": [
         {
           "type": "yaml",
-          "path": "services/factset-mcp/deploy/helm-charts/factset-mcp/Chart.yaml",
+          "path": "deploy/helm-charts/factset-mcp/Chart.yaml",
           "jsonpath": "$.version"
         },
         {
           "type": "yaml",
-          "path": "services/factset-mcp/deploy/helm-charts/factset-mcp/values.yaml",
-          "jsonpath": "$.image.tag"
+          "path": "deploy/helm-charts/factset-mcp/values.yaml",
+          "jsonpath": "$.server.image.tag"
         }
       ]
     },
