@@ -10,14 +10,12 @@
     "services/factset-mcp": {
       "extra-files": [
         {
-          "type": "yaml",
-          "path": "deploy/helm-charts/factset-mcp/Chart.yaml",
-          "jsonpath": "$.version"
+          "type": "generic",
+          "path": "deploy/helm-charts/factset-mcp/Chart.yaml"
         },
         {
-          "type": "yaml",
-          "path": "deploy/helm-charts/factset-mcp/values.yaml",
-          "jsonpath": "$.server.image.tag"
+          "type": "generic",
+          "path": "deploy/helm-charts/factset-mcp/values.yaml"
         }
       ]
     },
@@ -37,4 +35,3 @@
     }
   }
 }
-
